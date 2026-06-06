@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# local brand source files kept at project root (already copied into public/)
+/logo.png
+/og image.png
+/og-image.png
+/favicon.webp
+/iso 9001 s1-300x143.webp
+/iso 14001 s3-300x141.webp
+/iso 18001.webp

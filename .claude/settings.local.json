@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/Users/torunkaratas/Desktop/web sitesi 2\" && ls -la && echo \"---DOWNLOADS JSON---\" && ls -la /Users/torunkaratas/Downloads/*.json 2>/dev/null | head)"
+    ]
+  }
+}
