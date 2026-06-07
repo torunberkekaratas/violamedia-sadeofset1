@@ -175,6 +175,19 @@ const TR = {
   'news.9.text':
     'Bureau Veritas’ın bağımsız denetiminin ardından entegre yönetim sistemimizi yeniledik.',
 
+  // Contact form + map
+  'form.title': 'Bize mesaj gönderin',
+  'form.name': 'Ad Soyad',
+  'form.email': 'E-posta',
+  'form.phone': 'Telefon',
+  'form.company': 'Firma',
+  'form.message': 'Mesaj',
+  'form.submit': 'Mesajı gönder →',
+  'form.note':
+    'Mesajınız, info@sadeofset.com.tr adresine gönderilmek üzere e-posta uygulamanızda açılır.',
+  'form.addr.h': 'Adres',
+  'form.directions': 'Yol tarifi al ↗',
+
   // Footer
   'foot.1': '© 1975–2025 Sade Ofset — Baskı &amp; Ambalaj',
   'foot.2': '50. yılımızı kutluyoruz',

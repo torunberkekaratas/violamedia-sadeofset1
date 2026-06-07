@@ -494,6 +494,63 @@
               </p>
             </div>
           </div>
+
+          <div class="connect">
+            <form class="cform" id="contactForm" novalidate>
+              <h3 class="connect__title" data-i18n="form.title">Send us a message</h3>
+              <div class="cform__grid">
+                <label class="cform__field">
+                  <span data-i18n="form.name">Full name</span>
+                  <input type="text" name="name" autocomplete="name" required />
+                </label>
+                <label class="cform__field">
+                  <span data-i18n="form.email">Email</span>
+                  <input type="email" name="email" autocomplete="email" required />
+                </label>
+                <label class="cform__field">
+                  <span data-i18n="form.phone">Phone</span>
+                  <input type="tel" name="phone" autocomplete="tel" />
+                </label>
+                <label class="cform__field">
+                  <span data-i18n="form.company">Company</span>
+                  <input type="text" name="company" autocomplete="organization" />
+                </label>
+                <label class="cform__field cform__field--full">
+                  <span data-i18n="form.message">Message</span>
+                  <textarea name="message" rows="4" required></textarea>
+                </label>
+              </div>
+              <button type="submit" class="cform__submit" data-i18n="form.submit">Send message →</button>
+              <p class="cform__note" data-i18n="form.note">Your message opens in your email app, addressed to info@sadeofset.com.tr.</p>
+            </form>
+
+            <div class="connect__map">
+              <div class="connect__mapframe">
+                <iframe
+                  title="Sade Ofset — Google Maps"
+                  src="https://www.google.com/maps?q=Sade%20Ofset%20Matbaac%C4%B1l%C4%B1k%20%26%20Ambalaj%2C%20Massit%20Matbaac%C4%B1lar%20Sitesi%2C%20100.%20Y%C4%B1l%2C%202.%20Cd.%20No%3A177%2C%2034218%20Ba%C4%9Fc%C4%B1lar/%C4%B0stanbul&hl=tr&z=16&output=embed"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <div class="connect__addr">
+                <h4 data-i18n="form.addr.h">Address</h4>
+                <p>
+                  Sade Ofset Matbaacılık &amp; Ambalaj<br />
+                  Massit Matbaacılar Sitesi, 100. Yıl,<br />
+                  2. Cd. No:177, 34218 Bağcılar / İstanbul
+                </p>
+                <a
+                  class="connect__dir"
+                  href="https://www.google.com/maps/dir/?api=1&destination=Sade%20Ofset%20Matbaac%C4%B1l%C4%B1k%20%26%20Ambalaj%2C%20Massit%20Matbaac%C4%B1lar%20Sitesi%2C%20100.%20Y%C4%B1l%2C%202.%20Cd.%20No%3A177%2C%2034218%20Ba%C4%9Fc%C4%B1lar/%C4%B0stanbul"
+                  target="_blank"
+                  rel="noopener"
+                  data-i18n="form.directions"
+                >Get directions ↗</a>
+              </div>
+            </div>
+          </div>
         </section>
 
         <footer class="footer">

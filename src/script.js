@@ -389,3 +389,40 @@ if ('requestIdleCallback' in window) {
 } else {
   requestAnimationFrame(() => requestAnimationFrame(initThreeJs));
 }
+
+// ---------------------------------------------------------------------------
+// Contact form — no backend required. On submit we compose a pre-filled email
+// to info@sadeofset.com.tr and hand it off to the visitor's mail client.
+// ---------------------------------------------------------------------------
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!contactForm.checkValidity()) {
+      contactForm.reportValidity();
+      return;
+    }
+
+    const value = (name) => (contactForm.elements[name]?.value || '').trim();
+    const tr = document.documentElement.lang === 'tr';
+    const L = tr
+      ? { subj: 'Web sitesi iletişim', name: 'Ad Soyad', email: 'E-posta', phone: 'Telefon', company: 'Firma', message: 'Mesaj' }
+      : { subj: 'Website contact', name: 'Name', email: 'Email', phone: 'Phone', company: 'Company', message: 'Message' };
+
+    const subject = `${L.subj} — ${value('name') || value('email')}`;
+    const body = [
+      `${L.name}: ${value('name')}`,
+      `${L.email}: ${value('email')}`,
+      `${L.phone}: ${value('phone')}`,
+      `${L.company}: ${value('company')}`,
+      '',
+      `${L.message}:`,
+      value('message'),
+    ].join('\n');
+
+    window.location.href = `mailto:info@sadeofset.com.tr?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  });
+}
