@@ -1,11 +1,7 @@
 import * as THREE from 'three';
 import Lenis from 'lenis';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { vertexShader, fragmentShader } from './shaders.js';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ---------------------------------------------------------------------------
 // CONFIG — single source of truth for the spiral's look and motion.
@@ -71,10 +67,6 @@ lenis.on('scroll', ({ scroll, limit, velocity }) => {
     velocity * CONFIG.scrollRotationMultiplier * CONFIG.scrollMultiplier;
 });
 
-// Keep ScrollTrigger in sync with Lenis so reveals fire at the right scroll
-// positions even though Lenis is interpolating wheel events.
-lenis.on('scroll', ScrollTrigger.update);
-
 function onMouseMove(event) {
   if (state.isMobile) return;
   state.mouseX = (event.clientX / window.innerWidth) * 2 - 1;
@@ -100,35 +92,66 @@ requestAnimationFrame(lenisRaf);
 // otherwise duplicates would pile up on every save.
 // ---------------------------------------------------------------------------
 
-const revealCtx = gsap.context(() => {
-  gsap.utils.toArray('.reveal-text').forEach((el) => {
-    gsap.fromTo(
-      el,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.4,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-          // once it's revealed, leave it alone — feels less like a UI gimmick
-          once: true,
-        },
-      }
-    );
-  });
-});
+// Reveals are driven by a native IntersectionObserver instead of GSAP
+// ScrollTrigger. This is far more robust on a page with a sticky hero and a
+// tall WebGL canvas (where ScrollTrigger could mis-position a trigger and
+// leave a block stuck at opacity 0 — the bug this replaces).
+//
+// Crucially, content is VISIBLE BY DEFAULT (see `.reveal-text` in CSS). The
+// hidden → reveal animation is only enabled once we add `.reveals` to <html>,
+// so if this script ever fails to run, nothing is left invisible.
+document.documentElement.classList.add('reveals');
 
-// Recompute trigger positions once everything (fonts, images, WebGL) has
-// fully loaded so the reveal "top 80%" lines up with the final layout.
-window.addEventListener('load', () => ScrollTrigger.refresh());
+function reveal(el) {
+  el.classList.add('is-in');
+}
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        reveal(entry.target);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.01 }
+);
+
+function observeReveals() {
+  document.querySelectorAll('.reveal-text:not(.is-in)').forEach((el) =>
+    revealObserver.observe(el)
+  );
+}
+
+// Pure class-based failsafe (no GSAP) — guarantees that anything inside or
+// near the viewport is revealed even if IntersectionObserver callbacks are
+// delayed or a trigger is mis-measured. Runs on scroll, on Lenis scroll, on
+// resize and after load.
+function revealInView() {
+  const vh = window.innerHeight;
+  document.querySelectorAll('.reveal-text:not(.is-in)').forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.top < vh * 0.95 && r.bottom > 0) reveal(el);
+  });
+}
+
+observeReveals();
+revealInView();
+
+lenis.on('scroll', revealInView);
+window.addEventListener('scroll', revealInView, { passive: true });
+window.addEventListener('resize', revealInView);
+window.addEventListener('load', () => {
+  observeReveals();
+  revealInView();
+  setTimeout(revealInView, 300);
+  setTimeout(revealInView, 1000);
+});
 
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    revealCtx.revert();
+    revealObserver.disconnect();
   });
 }
 

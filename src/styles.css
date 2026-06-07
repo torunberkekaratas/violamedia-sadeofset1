@@ -381,6 +381,29 @@ section {
   margin: 0 auto;
 }
 
+/* Scroll reveals — content is visible by default; the hidden→reveal animation
+   is only enabled once JS adds `.reveals` to <html>, so content can never be
+   left permanently invisible if the script fails to run. */
+.reveals .reveal-text {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.reveals .reveal-text.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveals .reveal-text {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .section-tag {
   display: inline-flex;
   align-items: center;
