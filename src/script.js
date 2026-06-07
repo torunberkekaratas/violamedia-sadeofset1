@@ -187,7 +187,7 @@ function loadTexture(url) {
       undefined,
       () => {
         const fallback = new THREE.DataTexture(
-          new Uint8Array([22, 22, 24, 255]),
+          new Uint8Array([238, 242, 248, 255]),
           1,
           1,
           THREE.RGBAFormat
@@ -254,7 +254,14 @@ function createCurvedTileGeometry(radius, arcAngle, tileHeight, segments) {
   return geometry;
 }
 
-function buildSpiral(textures) {
+// Materials grouped by texture index, so a texture that arrives later can be
+// swapped into every tile that uses it (progressive fill-in).
+const materialsByTexture = Array.from(
+  { length: CONFIG.totalImages },
+  () => []
+);
+
+function buildSpiral(getTexture) {
   const arcAngle = angleStep + CONFIG.tileOverlap;
   // Anchor tile height to the chord length at the start radius so each
   // tile reads as proportional even as the radius tapers down the helix.
@@ -276,18 +283,20 @@ function buildSpiral(textures) {
       CONFIG.tileSegments
     );
 
-    const texture = textures[i % textures.length];
+    const texIndex = i % CONFIG.totalImages;
 
     const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
       uniforms: {
-        uMap: { value: texture },
+        uMap: { value: getTexture(texIndex) },
         uCameraPosition: { value: camera.position },
       },
       side: THREE.DoubleSide,
       transparent: true,
     });
+
+    materialsByTexture[texIndex].push(material);
 
     const tile = new THREE.Mesh(geometry, material);
     tile.position.y = startY - i * CONFIG.spiralGap;
@@ -374,9 +383,26 @@ function initThreeJs() {
 
   requestAnimationFrame(tick);
 
-  Promise.all(textureUrls.map(loadTexture)).then((textures) => {
-    buildSpiral(textures);
-    renderer.domElement.classList.add('is-ready');
+  // Build the spiral immediately with a light placeholder so the gallery's
+  // shape appears at once, then stream the real textures in and swap them per
+  // tile as each arrives — no waiting for all ten to finish.
+  const placeholder = new THREE.DataTexture(
+    new Uint8Array([238, 242, 248, 255]),
+    1,
+    1,
+    THREE.RGBAFormat
+  );
+  placeholder.needsUpdate = true;
+
+  buildSpiral(() => placeholder);
+  renderer.domElement.classList.add('is-ready');
+
+  textureUrls.forEach((url, idx) => {
+    loadTexture(url).then((texture) => {
+      materialsByTexture[idx].forEach((material) => {
+        material.uniforms.uMap.value = texture;
+      });
+    });
   });
 }
 
