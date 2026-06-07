@@ -236,8 +236,8 @@ em {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at center, transparent 30%, rgba(255, 255, 255, 0.55) 100%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, transparent 16%, transparent 74%, var(--bg) 100%);
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.14) 52%, transparent 78%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.32) 0%, transparent 24%, transparent 62%, rgba(255, 255, 255, 0.22) 86%, var(--bg) 100%);
 }
 
 .hero__topbar,
@@ -370,46 +370,34 @@ em {
   }
 }
 
-/* Mobile legibility — the foreground hero text sits over the busy WebGL
-   gallery, so on small screens we strengthen the white scrim, bump font
-   weights and add a soft white halo so every line stays readable. */
-@media (max-width: 768px) {
-  /* Light scrim — just enough to keep text legible while the gallery posters
-     stay visible behind it. Readability is carried mostly by the bold weights
-     and the tight white text-halo below. */
-  .hero::after {
-    background:
-      radial-gradient(ellipse at center, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.14) 52%, transparent 78%),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.32) 0%, transparent 24%, transparent 62%, rgba(255, 255, 255, 0.22) 86%, var(--bg) 100%);
-  }
+/* Hero foreground legibility (all screen sizes) — the small mono lines and
+   caption sit over the busy WebGL gallery, so we use bold weights plus a tight
+   white text-halo to keep every line readable. The big title is left alone:
+   it's large/bold enough on its own and a halo washes out its blue gradient. */
+.hero__topbar,
+.hero__bottom {
+  color: var(--fg);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.95), 0 1px 3px rgba(255, 255, 255, 0.9);
+}
 
-  .hero__topbar,
-  .hero__bottom {
-    color: var(--fg);
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.95), 0 1px 3px rgba(255, 255, 255, 0.9);
-  }
+.hero__topbar span,
+.hero__signoff,
+.hero__scroll {
+  font-weight: 700;
+  color: var(--fg);
+}
 
-  .hero__topbar span,
-  .hero__signoff {
-    font-weight: 700;
-    color: var(--fg);
-  }
+.hero__eyebrow {
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 1px 3px rgba(255, 255, 255, 0.9);
+}
 
-  .hero__eyebrow {
-    font-weight: 700;
-    color: var(--accent);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 1px 3px rgba(255, 255, 255, 0.9);
-  }
-
-  /* Title keeps its full desktop colour — it's large and bold enough to read
-     without a halo, and a white halo washed out the blue gradient on mobile. */
-
-  .hero__caption {
-    font-weight: 700;
-    opacity: 1;
-    color: var(--fg);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 1px 3px rgba(255, 255, 255, 0.92);
-  }
+.hero__caption {
+  font-weight: 700;
+  opacity: 1;
+  color: var(--fg);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 1px 3px rgba(255, 255, 255, 0.92);
 }
 
 /* ---------------------------------------------------------------------------
