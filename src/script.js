@@ -380,14 +380,25 @@ function initThreeJs() {
   });
 }
 
-// Kick the WebGL spiral off as soon as the first frame has painted. The
-// textures are small WebP files now, so there's no need to defer far into
-// idle time — a short idle window keeps it off the critical paint without
-// the old multi-second wait.
+// Kick the WebGL spiral off the moment the first frame has painted. The
+// textures are tiny preloaded WebP files now, so there's no multi-second wait.
+//
+// We start on the first animation frame (fast, right after the hero text
+// paints) but also keep an idle-callback / timeout fallback so the spiral
+// still initialises in a backgrounded tab — where requestAnimationFrame is
+// paused — instead of never appearing. A guard makes sure init runs once.
+let spiralStarted = false;
+function startSpiral() {
+  if (spiralStarted) return;
+  spiralStarted = true;
+  initThreeJs();
+}
+
+requestAnimationFrame(() => requestAnimationFrame(startSpiral));
 if ('requestIdleCallback' in window) {
-  requestIdleCallback(initThreeJs, { timeout: 300 });
+  requestIdleCallback(startSpiral, { timeout: 250 });
 } else {
-  requestAnimationFrame(() => requestAnimationFrame(initThreeJs));
+  setTimeout(startSpiral, 250);
 }
 
 // ---------------------------------------------------------------------------
