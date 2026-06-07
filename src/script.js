@@ -201,7 +201,7 @@ function loadTexture(url) {
 
 const textureUrls = Array.from(
   { length: CONFIG.totalImages },
-  (_, i) => `/images/img${i + 1}.jpg`
+  (_, i) => `/images/img${i + 1}.webp`
 );
 
 // ---------------------------------------------------------------------------
@@ -380,8 +380,12 @@ function initThreeJs() {
   });
 }
 
+// Kick the WebGL spiral off as soon as the first frame has painted. The
+// textures are small WebP files now, so there's no need to defer far into
+// idle time — a short idle window keeps it off the critical paint without
+// the old multi-second wait.
 if ('requestIdleCallback' in window) {
-  requestIdleCallback(initThreeJs, { timeout: 1500 });
+  requestIdleCallback(initThreeJs, { timeout: 300 });
 } else {
   requestAnimationFrame(() => requestAnimationFrame(initThreeJs));
 }
