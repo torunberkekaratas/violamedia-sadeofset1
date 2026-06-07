@@ -370,6 +370,46 @@ em {
   }
 }
 
+/* Mobile legibility — the foreground hero text sits over the busy WebGL
+   gallery, so on small screens we strengthen the white scrim, bump font
+   weights and add a soft white halo so every line stays readable. */
+@media (max-width: 768px) {
+  .hero::after {
+    background:
+      radial-gradient(ellipse at center, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.5) 48%, rgba(255, 255, 255, 0.22) 72%, transparent 100%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.3) 22%, transparent 50%, rgba(255, 255, 255, 0.45) 82%, var(--bg) 100%);
+  }
+
+  .hero__topbar,
+  .hero__bottom {
+    color: var(--fg);
+    text-shadow: 0 1px 6px rgba(255, 255, 255, 0.95);
+  }
+
+  .hero__topbar span,
+  .hero__signoff {
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .hero__eyebrow {
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.95);
+  }
+
+  .hero__title {
+    text-shadow: 0 2px 16px rgba(255, 255, 255, 0.7);
+  }
+
+  .hero__caption {
+    font-weight: 600;
+    opacity: 1;
+    color: var(--fg);
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.95);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Section scaffolding
    --------------------------------------------------------------------------- */
